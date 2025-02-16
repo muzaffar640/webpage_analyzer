@@ -102,54 +102,13 @@ class WebScraper:
     
     def analyze_content(self, content: str, url: str) -> List[CVEData]:
         """Use OpenAI's tools API to extract CVE data from content."""
-        tools = [
-            {
-                "type": "function",
-                "function": {
-                    "name": "extract_cve_data",
-                    "description": "Extract CVE data from article text",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "cves": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {"type": "string", "description": "CVE ID (e.g., CVE-2024-1234)"},
-                                        "severity": {"type": "number", "description": "Base severity score"},
-                                        "api_last_modified": {"type": "string", "description": "Last modified date in ISO format"},
-                                        "api_created": {"type": "string", "description": "Creation date in ISO format"},
-                                        "references": {"type": "array", "items": {"type": "string"}, "description": "List of reference URLs"},
-                                        "metrics": {
-                                            "type": "object",
-                                            "properties": {
-                                                "version": {"type": "string"},
-                                                "vectorString": {"type": "string"},
-                                                "attackVector": {"type": "string"},
-                                                "attackComplexity": {"type": "string"},
-                                                "privilegesRequired": {"type": "string"},
-                                                "userInteraction": {"type": "string"},
-                                                "scope": {"type": "string"},
-                                                "confidentialityImpact": {"type": "string"},
-                                                "integrityImpact": {"type": "string"},
-                                                "availabilityImpact": {"type": "string"},
-                                                "baseScore": {"type": "number"},
-                                                "baseSeverity": {"type": "string"}
-                                            }
-                                        },
-                                        "weaknesses": {"type": "array", "items": {"type": "string"}},
-                                        "configurations": {"type": "array", "items": {"type": "string"}}
-                                    },
-                                    "required": ["name", "metrics"]
-                                }
-                            }
-                        },
-                        "required": ["cves"]
-                    }
-                }
-            }
-        ]
+        class CVEDataExtractor:
+            """Tool for extracting CVE data from article text."""
+
+            def __call__(self, cves: List[CVEData]) -> List[CVEData]:
+                return cves
+
+        tools = [CVEDataExtractor()]
 
         try:
             response = self.client.chat.completions.create(
@@ -169,7 +128,7 @@ class WebScraper:
                     {"role": "user", "content": f"Extract all CVE data from this article text: {content[:4000]}"}
                 ],
                 tools=tools,
-                tool_choice={"type": "function", "function": {"name": "extract_cve_data"}}
+                tool_choice=CVEDataExtractor
             )
 
             # Parse the function call response
