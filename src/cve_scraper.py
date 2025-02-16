@@ -6,7 +6,6 @@ import asyncio
 import logging
 from enum import Enum
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -125,9 +124,32 @@ class CVEScraper:
                     vectorString=metrics.get('vectorString', 'CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:N/A:N'),
                     attackVector=metrics.get('attackVector', AttackVector.NETWORK),
                     attackComplexity=metrics.get('attackComplexity', Complexity.HIGH),
+                    privilegesRequired=metrics.get('privilegesRequired', Impact.HIGH),
+                    userInteraction=metrics.get('userInteraction', 'NONE'),
+                    scope=metrics.get('scope', Scope.UNCHANGED),
+                    confidentialityImpact=metrics.get('confidentialityImpact', Impact.NONE),
+                    integrityImpact=metrics.get('integrityImpact', Impact.NONE),
+                    availabilityImpact=metrics.get('availabilityImpact', Impact.NONE),
                     baseScore=metrics.get('baseScore', 0.0),
                     baseSeverity=metrics.get('baseSeverity', 'NONE'),
-                    # Add other metrics as needed
+                    exploitCodeMaturity=metrics.get('exploitCodeMaturity', ExploitMaturity.UNPROVEN),
+                    remediationLevel=metrics.get('remediationLevel', RemediationLevel.OFFICIAL_FIX),
+                    reportConfidence=metrics.get('reportConfidence', 'UNKNOWN'),
+                    temporalScore=metrics.get('temporalScore', 0.0),
+                    temporalSeverity=metrics.get('temporalSeverity', 'NONE'),
+                    confidentialityRequirement=metrics.get('confidentialityRequirement', Requirement.LOW),
+                    integrityRequirement=metrics.get('integrityRequirement', Requirement.LOW),
+                    availabilityRequirement=metrics.get('availabilityRequirement', Requirement.LOW),
+                    modifiedAttackVector=metrics.get('modifiedAttackVector', AttackVector.NETWORK),
+                    modifiedAttackComplexity=metrics.get('modifiedAttackComplexity', Complexity.HIGH),
+                    modifiedPrivilegesRequired=metrics.get('modifiedPrivilegesRequired', Impact.HIGH),
+                    modifiedUserInteraction=metrics.get('modifiedUserInteraction', 'NONE'),
+                    modifiedScope=metrics.get('modifiedScope', Scope.UNCHANGED),
+                    modifiedConfidentialityImpact=metrics.get('modifiedConfidentialityImpact', Impact.NONE),
+                    modifiedIntegrityImpact=metrics.get('modifiedIntegrityImpact', Impact.NONE),
+                    modifiedAvailabilityImpact=metrics.get('modifiedAvailabilityImpact', Impact.NONE),
+                    environmentalScore=metrics.get('environmentalScore', 0.0),
+                    environmentalSeverity=metrics.get('environmentalSeverity', 'NONE')
                 )
                 
                 # Get EPSS scores
